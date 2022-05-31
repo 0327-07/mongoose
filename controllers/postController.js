@@ -1,5 +1,5 @@
 
-import PostMessage from "../models/postMessages.js";
+import PostMessage from "../models/postMessage.js";
 
 export const getPosts = async (req, res) => {
   try {
@@ -21,4 +21,38 @@ export const createPost = async (req, res) => {
       res.status(409).json({ msg: error.message });
     }
   };
+  
+  /* export const deletePost = async (req, res) => {
+    try {
+      await PostMessage.findByIdAndRemove(req.params.id);
+      res.status(201).json({ msg: "Post deleted!!" });
+    } catch (error) {
+      res.status(409).json({ msg: error.message });
+    }
+  }; */
+  
+  export const deletePost = async (req, res) => {
+    try {
+      if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(404).json({ msg: "No post with this id!" });
+      }
+      await PostMessage.findByIdAndRemove(req.params.id);
+      res.status(201).json({ msg: "Post deleted!!" });
+    } catch (error) {
+      res.status(409).json({ msg: error.message });
+    }
+  };
+  
+  export const updatePost = async (req, res) => {
+    try {
+      const updatedPost = await PostMessage.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+      );
+      res.status(201).json(updatePost);
+    } catch (error) {
+      res.status(409).json({ msg: error.message });
+    }
+  };
+  
   
